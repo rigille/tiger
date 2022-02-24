@@ -4,7 +4,7 @@
 #include <functional>
 #include <optional>
 
-#include "immer/flex_vector.hpp"
+#include "../immer/flex_vector.hpp"
 #include "helper.hpp"
 
 using immer::flex_vector;
