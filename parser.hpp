@@ -1,3 +1,4 @@
+#include <iostream>
 #include <memory>
 #include <variant>
 #include <functional>
@@ -17,6 +18,17 @@ struct state {
   int idx;
   flex_vector<char> text;
 };
+
+void flex_vector_print(flex_vector<char> vec) {
+  for (const char c: vec) {
+    std::cout << c;
+  }
+}
+
+void state_print(state st) {
+  auto tail = st.text.drop(st.idx);
+  flex_vector_print(tail);
+}
 
 template <class T>
 using Reply = pair<optional<T>, state>;
@@ -62,19 +74,20 @@ Parser<char> range(char first, char last) {
   return
     [=](state st) {
       if (st.idx < st.text.size()) {
-        return pair<optional<char>, state>(std::nullopt, st);
-      } else {
         auto c = st.text[st.idx];
         if (first <= c && c <= last) {
-          state new_st = {st.idx++, st.text};
+          state new_st = {st.idx++, std::move(st.text).drop(1)};
           return pair<optional<char>, state>(c, new_st);
         } else {
           return pair<optional<char>, state>(std::nullopt, st);
         }
+      } else {
+        return pair<optional<char>, state>(std::nullopt, st);
       }
     };
 }
 
+// TODO test this
 Parser<char> one(char c) {
   return
     [=](state st) {
@@ -92,7 +105,8 @@ Parser<char> one(char c) {
     };
 }
 
-pair<optional<std::monostate>, state> eof(state st) {
+// TODO test this
+Reply<std::monostate> eof(state st) {
   if (st.idx >= st.text.size()) {
     return pair<optional<std::monostate>, state>(std::monostate(), st);
   } else {

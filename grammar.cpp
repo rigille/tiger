@@ -28,18 +28,25 @@ parser::Parser<flex_vector<char>> identifier_builder() {
 
 parser::Parser<flex_vector<char>> identifier = identifier_builder();
 
-
 int main() {
   std::string str_text = "hello";
   auto flex_text = flex_vector<char>(str_text.begin(), str_text.end());
-  std::cout << flex_text.size() << std::endl;
+  //std::cout << flex_text.size() << std::endl;
   parser::state init_state = {0, flex_text};
-  parser::Reply<flex_vector<char>> reply = identifier(init_state);
-  if (reply.first) {
+  auto [result, state] = identifier(init_state);
+  //auto [result, state] = lowercase_letter(init_state);
+  if (result) {
     std::cout << "parseou" << std::endl;
+    std::cout << "state: \"";
+    parser::state_print(state);
+    std::cout << "\", result: ";
+    parser::flex_vector_print(*result);
+    std::cout << std::endl;
     return 0;
   } else {
     std::cout << "não parseou" << std::endl;
+    parser::state_print(state);
+    std::cout << std::endl;
     return 0;
   }
 }
