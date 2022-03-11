@@ -1,3 +1,4 @@
+extern crate im;
 use std::sync::Arc;
 
 pub enum Var {
@@ -16,7 +17,6 @@ pub enum Var {
         exp: Exp,
     },
 }
-// TODO replace Vec with im::Vector
 pub enum Exp {
     Var {
         pos: Pos,
@@ -36,7 +36,7 @@ pub enum Exp {
     Call {
         pos: Pos,
         func: Symbol,
-        args: Vec<Arc<Exp>>,
+        args: im::Vector<Arc<Exp>>,
     },
     Op {
         pos: Pos,
@@ -47,11 +47,11 @@ pub enum Exp {
     Record {
         pos: Pos,
         typ: Symbol,
-        fields: Vec<Efield>,
+        fields: im::Vector<Efield>,
     },
     Seq {
         pos: Pos,
-        seq: Vec<Arc<Exp>>,
+        seq: im::Vector<Arc<Exp>>,
     },
     Assign {
         pos: Pos,
@@ -81,7 +81,7 @@ pub enum Exp {
     },
     Let {
         pos: Pos,
-        decs: Vec<Dec>,
+        decs: im::Vector<Dec>,
         body: Arc<Exp>,
     },
     Array {
@@ -94,7 +94,7 @@ pub enum Exp {
 pub enum Dec {
     Function {
         pos: Pos,
-        function: Vec<Arc<Fundec>>,
+        function: im::Vector<Arc<Fundec>>,
     },
     Var {
         pos: Pos,
@@ -104,12 +104,12 @@ pub enum Dec {
     },
     Type {
         pos: Pos,
-        typ: Vec<NameTy>,
+        typ: im::Vector<NameTy>,
     },
 }
 pub enum Ty {
     Name { pos: Pos, name: Symbol },
-    Record { pos: Pos, record: Vec<Field> },
+    Record { pos: Pos, record: im::Vector<Field> },
     Array { pos: Pos, array: Symbol },
 }
 pub struct Field {
@@ -120,7 +120,7 @@ pub struct Field {
 pub struct Fundec {
     pos: Pos,
     name: Symbol,
-    params: Vec<Field>,
+    params: im::Vector<Field>,
     result: Symbol,
 }
 pub struct NameTy {
